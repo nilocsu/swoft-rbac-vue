@@ -6,8 +6,8 @@
           <el-input v-model="searchForm.name" placeholder="名称" style="width: 100px;" />
         </el-form-item>
 
-        <el-form-item label="标识" prop="code">
-          <el-input v-model="searchForm.code" placeholder="标识" style="width: 120px;" />
+        <el-form-item label="标识" prop="perms">
+          <el-input v-model="searchForm.perms" placeholder="标识" style="width: 120px;" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSearchFormSubmit">
@@ -108,7 +108,7 @@ export default {
   methods: {
     getTableData () {
       let query = {
-        pageIndex: this.page.current,
+        page: this.page.current,
         pageSize: this.page.size,
         sortBy: this.sort.prop,
         descending: this.sort.order === 'descending',

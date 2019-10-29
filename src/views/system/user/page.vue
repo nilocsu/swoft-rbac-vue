@@ -81,7 +81,7 @@
       <el-table-column
         label="账号"
         prop="username"
-        sortable="custom"
+        sortable
       >
         <template slot-scope="scope">
           {{scope.row.username}}
@@ -90,7 +90,7 @@
       <el-table-column
         label="姓名"
         prop="realName"
-        sortable="custom"
+        sortable
       >
         <template slot-scope="scope">
           {{scope.row.realName}}
@@ -99,7 +99,6 @@
       <el-table-column
         label="说明"
         prop="description"
-        sortable="custom"
         :show-overflow-tooltip="true"
       >
         <template slot-scope="scope">
@@ -109,7 +108,7 @@
       <el-table-column
         label="邮箱"
         prop="email"
-        sortable="custom"
+        sortable
         :show-overflow-tooltip="true"
       >
         <template slot-scope="scope">
@@ -235,7 +234,7 @@ export default {
   methods: {
     getTableData () {
       let query = {
-        pageIndex: this.page.current,
+        page: this.page.current,
         pageSize: this.page.size,
         sortBy: this.sort.prop,
         descending: this.sort.order === 'descending',
@@ -243,7 +242,7 @@ export default {
       }
       userService.getUserList(query).then(res => {
         this.tableData = res.data
-        this.page.total = res.data.total
+        this.page.total = res.total
       })
     },
     handleSearchFormSubmit () {

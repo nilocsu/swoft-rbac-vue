@@ -10,17 +10,19 @@ import d2Admin from '@/plugin/d2admin'
 import store from '@/store/index'
 import '@/plugin/permission'
 
+// 使用ApexCharts
+import VueApexCharts from 'vue-apexcharts'
+
 // 模拟数据
 import '@/mock'
 // 菜单和路由设置
 import router from './router'
-// import menuHeader from '@/menu/header'
-// import menuAside from '@/menu/aside'
-// import { frameInRoutes } from '@/router/routes'
 
 // 核心插件
 // 核心插件
 Vue.use(d2Admin, { store })
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
 
 new Vue({
   router,
