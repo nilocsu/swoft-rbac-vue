@@ -6,12 +6,14 @@
         icon="el-icon-circle-plus-outline"
         size="mini"
         @click="addMenu"
+        v-hasPermission="['menu:add']"
       >添加菜单</el-button>
       <el-button
         type="primary"
         icon="el-icon-circle-plus-outline"
         size="mini"
         @click="addButton"
+        v-hasPermission="['menu:add']"
       >添加按钮</el-button>
     </el-button-group>
     <el-popover
@@ -42,13 +44,13 @@
         prop="menuName"
         label="名称"
         sortable
-        width="180"
       >
       </el-table-column>
       <el-table-column
         prop="icon"
         label="图标"
         sortable
+        width="80"
       >
       <template slot-scope="scope">
           <i :class="'fa fa-'+scope.row.icon"></i>
@@ -58,7 +60,7 @@
         label="类型"
         prop="type"
         sortable
-        width="180"
+        width="80"
       >
       <template slot-scope="scope">
         <el-tag
@@ -70,40 +72,51 @@
         label="Vue组件"
         prop="component"
         sortable
-        width="180"
       >
       </el-table-column>
       <el-table-column
         label="权限"
         prop="perms"
         sortable
-        width="180"
+        width="120"
       >
       </el-table-column>
       <el-table-column
-        fixed="right"
-        label="操作"
-        align="center"
+        label="菜单Url"
+        prop="path"
+        sortable
       >
-        <template slot-scope="scope">
-          <el-button
-            type="primary"
-            title="编辑"
-            size="mini"
-            icon="el-icon-edit"
-            circle
-            @click="openEditForm(scope.row)"
-          ></el-button>
-          <el-button
-            type="danger"
-            title="删除"
-            size="mini"
-            icon="el-icon-delete"
-            circle
-            @click="del(scope.row)"
-          ></el-button>
-        </template>
       </el-table-column>
+      <d2-permission :authority="['menu:update', 'menu:delete']">
+        <el-table-column
+          fixed="right"
+          label="操作"
+          align="center"
+          width="120"
+          v-hasAnyPermission="['menu:update', 'menu:delete']"
+        >
+          <template slot-scope="scope">
+            <el-button
+              type="primary"
+              title="编辑"
+              size="mini"
+              icon="el-icon-edit"
+              circle
+              @click="openEditForm(scope.row)"
+              v-hasPermission="['menu:update']"
+            ></el-button>
+            <el-button
+              type="danger"
+              title="删除"
+              size="mini"
+              icon="el-icon-delete"
+              circle
+              @click="del(scope.row)"
+              v-hasPermission="['menu:delete']"
+            ></el-button>
+          </template>
+        </el-table-column>
+      </d2-permission>
       </el-table>
     </el-row>
     <button-edit
@@ -123,7 +136,7 @@
 import buttonEdit from './buttonEdit'
 import menuEdit from './menuEdit'
 import * as menuService from '@/api/sys/menu'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'MenuPage',
   components: { buttonEdit, menuEdit },
@@ -136,16 +149,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('d2admin/menu', [
-      'header',
-      'aside'
+    ...mapState('d2admin/permission', [
+      'router'
     ])
   },
   methods: {
-    ...mapMutations('d2admin/menu', [
-    //   'headerSet',
-      'asideSet'
-    ]),
+    ...mapActions('d2admin/permission', ['reload']),
     getMenuList () {
       menuService.getMenuList().then(res => {
         this.menuList = res
@@ -154,6 +163,7 @@ export default {
     openEditForm (data) {
       let m = JSON.parse(JSON.stringify(data))
       this.menu = { ...m }
+      this.menu.children = null
       if (data.type === '0') {
         this.menuFormEdit = true
       } else {
@@ -186,6 +196,7 @@ export default {
           })
           .then(() => {
             this.getMenuList()
+            this.submit()
           })
       })
     },
@@ -197,12 +208,10 @@ export default {
         }
       })
     },
-    submit () {
-    //   menuService.saveMenu(this.menuform).then(() => {
-    //     this.getMenuList()
-    //     // todo 侧栏需要请求个人的accessRoute
-    //     // this.asideSet(this.menuList)
-    //   })
+    async submit () {
+      this.getMenuList()
+      await this.reload()
+      this.$router.addRoutes(this.router)
     }
   },
   created () {

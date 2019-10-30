@@ -152,7 +152,7 @@
 <script>
 import * as roleService from '@/api/sys/role'
 import * as userService from '@/api/sys/user'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'userRole',
   props: {
@@ -181,9 +181,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('d2admin/menu', [
-      'header',
-      'aside'
+    ...mapState('d2admin/permission', [
+      'roles'
     ])
   },
   watch: {
@@ -195,14 +194,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('d2admin/menu', [
-    //   'headerSet',
-      'asideSet'
-    ]),
+    ...mapActions('d2admin/permission', ['reload']),
     dialogOpen () {
       this.getTableData()
       userService.getUserRole(this.user.id).then(data => {
-        console.log(data)
         this.hasRole = data
       })
     },
@@ -265,6 +260,13 @@ export default {
             type: 'success'
           })
           this.getTableData()
+          for (let v of this.roles) {
+            if (v.id === roleId) {
+              this.reload(() => {
+                this.$router.addRoutes(this.router)
+              })
+            }
+          }
         })
     }
   }

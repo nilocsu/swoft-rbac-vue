@@ -44,6 +44,7 @@ export const hasNoPermission = {
         if (!flag) {
           if (!el.parentNode) {
             el.style.display = 'none'
+            el.style.width = '0'
           } else {
             el.parentNode.removeChild(el)
           }

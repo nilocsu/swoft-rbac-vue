@@ -68,27 +68,7 @@ export default {
       let menus = await menuService.getMenuList()
       let roleMenus = await roleService.getRoleMenus(this.role.id)
       this.permissionList = menus
-      // let newArr = []
-      // if (roleMenus) {
-      //   roleMenus.forEach(item => {
-      //     this.checked(item, menus, newArr)
-      //   })
-      // }
-      // this.checkedId = newArr
       this.$refs.tree.setCheckedKeys(roleMenus)
-    },
-    checked (id, data, newArr) {
-      data.forEach(item => {
-        if (item.id === id) {
-          if (item.children === undefined) {
-            newArr.push(item.id)
-          }
-        } else {
-          if (item.children && item.children.length !== 0) {
-            this.checked(id, item.children, newArr)
-          }
-        }
-      })
     },
     clickDeal (currentObj, treeStatus) {
       // 用于：父子节点严格互不关联时，父节点勾选变化时通知子节点同步变化，实现单向关联。
@@ -140,6 +120,9 @@ export default {
       roleService.updateRoleMenus(this.role.id, data).then(data => {
         this.loading = false
         this.dialogVisible = false
+        this.$emit('submit')
+      }).catch(() => {
+        this.loading = false
       })
     },
     getParentNode () {

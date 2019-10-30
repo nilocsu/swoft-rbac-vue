@@ -38,7 +38,8 @@
             align="right"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :default-time="['12:00:00', '08:00:00']">
+            value-format="yyyy-MM-dd hh:mm:ss"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -92,6 +93,9 @@
         prop="time"
         label="耗时"
       >
+      <template slot-scope="scope">
+        <el-tag v-if="scope.row.time < 500" :type="getType(scope.row.time)">{{scope.row.time}}ms</el-tag>
+      </template>
       </el-table-column>
       <el-table-column
         prop="method"
@@ -102,6 +106,7 @@
         prop="params"
         label="方法参数"
         width="180"
+        height="180"
       >
       </el-table-column>
       <el-table-column
@@ -161,6 +166,13 @@ export default {
   },
   methods: {
     getLogList () {
+      if (this.dateTime && this.dateTime.length > 0) {
+        this.searchForm.createTimeFrom = this.dateTime[0]
+        this.searchForm.createTimeTo = this.dateTime[1]
+      } else {
+        this.searchForm.createTimeFrom = ''
+        this.searchForm.createTimeTo = ''
+      }
       let query = {
         page: this.page.current,
         pageSize: this.page.size,
@@ -176,7 +188,6 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-
     handleSizeChange (val) {
       this.page.size = val
       this.getLogList()
@@ -205,6 +216,17 @@ export default {
             this.getLogList()
           })
       })
+    },
+    getType (v) {
+      if (v < 500) {
+        return 'success'
+      } else if (v < 1000) {
+        return ''
+      } else if (v < 1500) {
+        return 'warning'
+      } else {
+        return 'danger'
+      }
     }
   },
   created () {

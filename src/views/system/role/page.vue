@@ -68,9 +68,9 @@
       <el-pagination :current-page="page.current" :page-size="page.size" :total="page.total" :page-sizes="[1,100, 200, 300, 400]" layout="total, sizes, prev, pager, next, jumper" style="margin: -10px;" @size-change="handleSizeChange" @current-change="handleCurrentChange">
       </el-pagination>
     </template>
-    <edit-form :role="role" v-model="editFormVisible" @submit="getTableData" />
-    <role-permission :role="role" v-model="permissionDialogVisible" />
-    <role-user :role="role" v-model="roleUserDialogVisible" />
+    <edit-form :role="role" v-model="editFormVisible" @submit="submit" />
+    <role-permission :role="role" v-model="permissionDialogVisible"  @submit="submit" />
+    <role-user :role="role" v-model="roleUserDialogVisible"  @submit="submit" />
   </d2-container>
 </template>
 <script>
@@ -78,6 +78,7 @@ import * as roleService from '@/api/sys/role'
 import editForm from './editForm'
 import rolePermission from './rolePermission'
 import roleUser from './roleUser'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'RolePage',
   components: { editForm, rolePermission, roleUser },
@@ -105,7 +106,13 @@ export default {
   mounted () {
     this.getTableData()
   },
+  computed: {
+    ...mapState('d2admin/permission', [
+      'router'
+    ])
+  },
   methods: {
+    ...mapActions('d2admin/permission', ['reload']),
     getTableData () {
       let query = {
         page: this.page.current,
@@ -149,6 +156,7 @@ export default {
       }).then(() => {
         roleService.delRoles([id]).then(() => {
           this.getTableData()
+          this.submit()
         })
       })
     },
@@ -164,6 +172,7 @@ export default {
           })
           .then(() => {
             this.getTableData()
+            this.submit()
           })
       })
     },
@@ -182,6 +191,10 @@ export default {
     openRoleUserDialog (role) {
       this.role = role
       this.roleUserDialogVisible = !this.roleUserDialogVisible
+    },
+    async submit () {
+      await this.reload()
+      this.$router.addRoutes(this.router)
     }
   }
 }
