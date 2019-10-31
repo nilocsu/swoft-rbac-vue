@@ -22,3 +22,25 @@ export function delLog (data) {
     }
   })
 }
+export function loginLog (query) {
+  return request({
+    url: '/system/login/log',
+    method: 'get',
+    params: query,
+    loading: {
+      type: 'nprogress',
+      interval: 500
+    }
+  })
+}
+export function delLoginLog (data) {
+  return request({
+    url: '/system/login/log',
+    method: 'delete',
+    data,
+    loading: {
+      type: 'nprogress',
+      interval: 500
+    }
+  })
+}

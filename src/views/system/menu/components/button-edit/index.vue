@@ -127,6 +127,9 @@ export default {
                 this.dialogVisible = false
                 this.$emit('submit')
               })
+              .catch(() => {
+                this.loading = false
+              })
           } else {
             menuService
               .addMenu({ ...this.form })
@@ -134,6 +137,9 @@ export default {
                 this.loading = false
                 this.dialogVisible = false
                 this.$emit('submit')
+              })
+              .catch(() => {
+                this.loading = false
               })
           }
         } else {

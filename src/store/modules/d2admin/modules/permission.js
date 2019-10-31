@@ -109,6 +109,11 @@ export default {
           // 加载上次退出时的多页列表
           dispatch('d2admin/page/openedLoad', null, { root: true })
           await Promise.resolve()
+        }).catch((error) => {
+          console.log(error)
+          if (typeof fn === 'function') {
+            fn()
+          }
         })
         resolve()
       })

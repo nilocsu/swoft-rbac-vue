@@ -19,16 +19,6 @@
           />
         </el-form-item>
         <el-form-item
-          label="操作描述"
-          prop="operation"
-        >
-          <el-input
-            v-model="searchForm.operation"
-            placeholder="操作描述"
-            style="width: 120px;"
-          />
-        </el-form-item>
-        <el-form-item
           label="操作时间"
           prop="operation"
         >
@@ -85,31 +75,6 @@
       >
       </el-table-column>
       <el-table-column
-        prop="operation"
-        label="操作描述"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="time"
-        label="耗时"
-      >
-      <template slot-scope="scope">
-        <el-tag v-if="scope.row.time < 500" :type="getType(scope.row.time)">{{scope.row.time}}ms</el-tag>
-      </template>
-      </el-table-column>
-      <el-table-column
-        prop="method"
-        label="执行方法"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="params"
-        label="方法参数"
-        width="180"
-        height="180"
-      >
-      </el-table-column>
-      <el-table-column
         prop="ip"
         label="IP地址"
         width="100"
@@ -146,7 +111,7 @@
 <script>
 import * as logService from '@/api/monitor/log'
 export default {
-  name: 'SystemLog',
+  name: 'LoginLog',
   data () {
     return {
       searchForm: {},
@@ -180,17 +145,32 @@ export default {
         descending: this.sort.order === 'descending',
         filter: this.searchForm
       }
-      logService.getLogList(query).then(res => {
+      logService.loginLog(query).then(res => {
         this.logList = res.data
         this.page.total = res.total
       })
     },
-    handleSelectionChange (val) {
-      this.multipleSelection = val
-    },
     handleSizeChange (val) {
       this.page.size = val
       this.getLogList()
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    batchDel () {
+      this.$confirm('确认删除？', '确认信息', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '删除',
+        cancelButtonText: '取消'
+      }).then(() => {
+        logService
+          .delLoginLog({
+            ids: this.multipleSelection.map(s => s.id)
+          })
+          .then(() => {
+            this.getLogList()
+          })
+      })
     },
     handleCurrentChange (val) {
       this.page.current = val
@@ -201,32 +181,6 @@ export default {
     },
     handleSearchFormSubmit () {
       this.getLogList()
-    },
-    batchDel () {
-      this.$confirm('确认删除？', '确认信息', {
-        distinguishCancelAndClose: true,
-        confirmButtonText: '删除',
-        cancelButtonText: '取消'
-      }).then(() => {
-        logService
-          .delLog({
-            ids: this.multipleSelection.map(s => s.id)
-          })
-          .then(() => {
-            this.getLogList()
-          })
-      })
-    },
-    getType (v) {
-      if (v < 500) {
-        return 'success'
-      } else if (v < 1000) {
-        return ''
-      } else if (v < 1500) {
-        return 'warning'
-      } else {
-        return 'danger'
-      }
     }
   },
   created () {

@@ -34,6 +34,7 @@ let isFetchPermissionInfo = false
 let fetchPermissionInfo = async () => {
   // 处理动态添加的路由
   await store.dispatch('d2admin/permission/reload', () => {
+    console.log(store.state.d2admin.permission.router)
     router.addRoutes(store.state.d2admin.permission.router)
   })
   await Promise.resolve()

@@ -19,7 +19,6 @@ const frameIn = [
         path: 'index',
         name: 'index',
         meta: meta,
-        // component: () => import('@/views/system/index')
         component: _import('home.vue')
       },
       // 系统 前端日志

@@ -185,7 +185,7 @@
       >
       </el-pagination>
     </template>
-    <edit-form
+    <user-edit
       :user="user"
       v-model="editFormVisible"
       @submit="getTableData"
@@ -198,11 +198,11 @@
 </template>
 <script>
 import * as userService from '@/api/sys/user'
-import userRole from './userRole'
-import editForm from './editForm'
+import UserRole from './components/user-role'
+import UserEdit from './components/user-edit'
 export default {
   name: 'UserPage',
-  components: { editForm, userRole },
+  components: { UserEdit, UserRole },
   data () {
     return {
       searchForm: {

@@ -1,4 +1,5 @@
 import store from '@/store'
+import router from '@/router'
 import axios from 'axios'
 import { Message } from 'element-ui'
 import util from '@/libs/util'
@@ -87,7 +88,15 @@ service.interceptors.response.use(
     if (error && error.response) {
       switch (error.response.status) {
         case 400: error.message = '请求错误'; break
-        case 401: error.message = '未授权，请登录'; break
+        case 401:
+          error.message = '未授权，请登录'
+          util.cookies.remove('token')
+          util.cookies.remove('uuid')
+          router.replace({
+            path: 'login',
+            query: { redirect: router.currentRoute.fullPath }
+          })
+          return
         case 403: error.message = '拒绝访问'; break
         case 404: error.message = `请求地址出错: ${error.response.config.url}`; break
         case 408: error.message = '请求超时'; break
@@ -97,9 +106,25 @@ service.interceptors.response.use(
         case 503: error.message = '服务不可用'; break
         case 504: error.message = '网关超时'; break
         case 505: error.message = 'HTTP版本不受支持'; break
-        default: break
+        default:
+          util.cookies.remove('token')
+          util.cookies.remove('uuid')
+          router.replace({
+            path: 'login',
+            query: { redirect: router.currentRoute.fullPath }
+          })
+          return
       }
+    } else {
+      util.cookies.remove('token')
+      util.cookies.remove('uuid')
+      router.replace({
+        path: 'login',
+        query: { redirect: router.currentRoute.fullPath }
+      })
+      return
     }
+    console.log(error.response)
     errorLog(error)
     return Promise.reject(error)
   }

@@ -133,13 +133,13 @@
 </template>
 
 <script>
-import buttonEdit from './buttonEdit'
-import menuEdit from './menuEdit'
+import ButtonEdit from './components/button-edit'
+import MenuEdit from './components/menu-edit'
 import * as menuService from '@/api/sys/menu'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'MenuPage',
-  components: { buttonEdit, menuEdit },
+  components: { ButtonEdit, MenuEdit },
   data () {
     return {
       buttonFormEdit: false,
@@ -208,10 +208,11 @@ export default {
         }
       })
     },
-    async submit () {
+    submit () {
       this.getMenuList()
-      await this.reload()
-      this.$router.addRoutes(this.router)
+      this.reload(() => {
+        this.$router.addRoutes(this.router)
+      })
     }
   },
   created () {
