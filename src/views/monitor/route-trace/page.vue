@@ -40,7 +40,7 @@
 <script>
 import * as routeService from '@/api/monitor/router'
 export default {
-  name: 'routeTrace',
+  name: 'RouteTrace',
   data () {
     return {
       tableData: [],

@@ -414,7 +414,6 @@ export default {
       }
       push(routes)
       state.pool = pool
-      console.log(state)
     }
   }
 }

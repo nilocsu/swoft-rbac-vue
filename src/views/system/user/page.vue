@@ -18,7 +18,6 @@
             style="width: 100px;"
           />
         </el-form-item>
-
         <el-form-item
           label="邮箱"
           prop="email"
@@ -37,7 +36,6 @@
             <d2-icon name="search" /> 查询
           </el-button>
         </el-form-item>
-
         <el-form-item>
           <el-button @click="handleSearchFormReset">
             <d2-icon name="refresh" /> 重置

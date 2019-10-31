@@ -15,8 +15,7 @@ function filterAsyncRouter (routes) {
       case 'EmptyPageView':
       case 'HomePageView':
         r = {
-          'title': route.menuName,
-          'name': route.menuName,
+          'name': route.name && route.name !== '' ? route.name : route.menuName,
           'path': route.path,
           'icon': route.icon,
           'component': () => import(`@/layout/header-aside`),
@@ -28,8 +27,7 @@ function filterAsyncRouter (routes) {
         break
       default:
         r = {
-          'title': route.menuName,
-          'name': route.menuName,
+          'name': route.name && route.name !== '' ? route.name : route.menuName,
           'path': route.path,
           'icon': route.icon,
           'component': () => import(`@/views/` + component),

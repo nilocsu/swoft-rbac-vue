@@ -146,7 +146,7 @@
 <script>
 import * as logService from '@/api/monitor/log'
 export default {
-  name: 'MenuPage',
+  name: 'systemLog',
   data () {
     return {
       searchForm: {},

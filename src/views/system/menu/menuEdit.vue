@@ -9,6 +9,14 @@
     @open="dialogOpen"
     >
     <div style="padding: 0 25px">
+      <el-popover
+        ref="popover"
+        placement="top-start"
+        title="提示"
+        width="200"
+        trigger="focus"
+        content="vue组件的name，不如果是正确的name，该组件不缓存；不支持中文输入">
+      </el-popover>
       <el-form
         ref="form"
        :model="form"
@@ -33,6 +41,19 @@
           <el-input
             v-model="form.path"
             placeholder="请输入菜单Url"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="组件名称"
+          prop="path"
+          :rules="[{ required: true, message: '不能为空'}]"
+        >
+          <el-input
+            v-model="form.name"
+            placeholder="组件name"
+            onkeyup="this.value=this.value.replace(/[^\w_-]/g,'');"
+            @focus="visible = !visible"
+            v-popover:popover
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -109,6 +130,7 @@ export default {
   data () {
     return {
       dialogVisible: false,
+      visible: false,
       loading: false,
       menuObj: {},
       menus: [],
