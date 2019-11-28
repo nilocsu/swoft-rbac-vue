@@ -10,9 +10,9 @@ function filterAsyncRouter (routes) {
     let component = ''
     let r = {}
     switch (route.component) {
+      case 'EmptyPageView':
       case 'MenuView':
       case 'PageView':
-      case 'EmptyPageView':
       case 'HomePageView':
         r = {
           'name': route.name && route.name !== '' ? route.name : route.menuName,
@@ -37,11 +37,12 @@ function filterAsyncRouter (routes) {
           }
         }
         component = route.component
+        routeMap.push(r)
     }
     if (route.children && route.children.length) {
-      r.children = filterAsyncRouter(route.children)
+      let m = filterAsyncRouter(route.children)
+      routeMap.push.apply(routeMap, m)
     }
-    routeMap.push(r)
   }
   return routeMap
 }
@@ -66,9 +67,11 @@ export default {
     permissions: [],
     // 角色编码
     roles: [],
+    rolePerms: [],
     id: 0,
     config: {},
     router: [],
+    dept: '',
     allMenuHeader: [],
     allMenuAside: []
   },
@@ -85,10 +88,28 @@ export default {
       return new Promise(async resolve => {
         await userService.getProfileMenus().then(async res => {
           let permissionMenu = parserTitle(res.menu)
-          let permissionRouter = [...filterAsyncRouter(res.menu)]
+          let permissionRouter = [
+            {
+              path: '/',
+              redirect: { name: 'index' },
+              component: () => import(`@/layout/header-aside`),
+              children: [...filterAsyncRouter(res.menu)]
+            }
+          ]
           state.permissions = res.permissions
-          state.roles = res.roles
+          if (res.roles && res.roles.length > 0) {
+            let role = []
+            let perms = []
+            for (let o of res.roles) {
+              role.push(o.name)
+              perms.push(o.perms)
+            }
+            state.roles = role
+            state.rolePerms = perms
+          }
           state.router = permissionRouter
+          console.log(permissionRouter)
+          state.dept = res.dept
           if (typeof fn === 'function') {
             fn()
           }

@@ -93,7 +93,6 @@
           label="操作"
           align="center"
           width="120"
-          v-hasAnyPermission="['menu:update', 'menu:delete']"
         >
           <template slot-scope="scope">
             <el-button

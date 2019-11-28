@@ -85,32 +85,6 @@
         </el-option>
       </el-select>
       </el-form-item>
-      <el-form-item
-        prop="deptId"
-        label="部门"
-        :rules="[{ required: true, message: '不能为空'}]"
-      >
-      <el-select v-model="form.deptId" placeholder="请选择">
-        <el-option
-          v-for="item in dept"
-          :key="item.id"
-          :label="item.deptName"
-          :value="item.id">
-        </el-option>
-      </el-select>
-      </el-form-item>
-      <el-form-item
-        prop="sex"
-        label="状态"
-      >
-      <el-switch
-        v-model="form.status"
-        active-text="有效"
-        inactive-text="锁定"
-        active-value="1"
-        inactive-value="0">
-      </el-switch>
-      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -120,13 +94,12 @@
         <el-button @click="close">取消</el-button>
       </el-form-item>
     </el-form>
-
   </el-dialog>
 
 </template>
 <script>
 import * as userService from '@/api/sys/user'
-import * as deptService from '@/api/sys/dept'
+import { mapActions } from 'vuex'
 export default {
   name: 'userEditForm',
   props: {
@@ -140,7 +113,6 @@ export default {
       form: {
         username: '',
         realName: '',
-        deptId: 0,
         email: '',
         mobile: '',
         status: '0',
@@ -173,50 +145,36 @@ export default {
     }
   },
   methods: {
+    ...mapActions('d2admin/user', ['set']),
     dialogOpen () {
       this.$refs.form.resetFields()
       if (this.user.id) {
-        userService.getUser(this.user.id).then(data => {
-          let form = {
-            username: data.username,
-            realName: data.realName,
-            deptId: data.deptId,
-            email: data.email,
-            mobile: data.mobile,
-            status: data.status,
-            sex: data.sex,
-            description: data.description
-          }
-          this.form = form
+        userService.getProfile().then(data => {
+          this.form = data
         })
       } else {
         this.form = {}
       }
-      deptService.getDeptList().then(data => {
-        this.dept = data
-      })
     },
     saveUser () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           this.loading = true
-          if (this.user.id) {
-            userService
-              .updateUser(this.user.id, { ...this.form })
-              .then(data => {
-                this.loading = false
-                this.dialogVisible = false
-                this.$emit('submit')
+          userService
+            .updateProfile({ ...this.form })
+            .then(data => {
+              this.loading = false
+              this.dialogVisible = false
+              this.set(this.form)
+              this.$message({
+                showClose: true,
+                message: '更新成功',
+                type: 'success'
               })
-          } else {
-            userService
-              .addUser({ ...this.form })
-              .then(data => {
-                this.loading = false
-                this.dialogVisible = false
-                this.$emit('submit')
-              })
-          }
+              this.$emit('submit')
+            }).catch(() => {
+              this.loading = false
+            })
         } else {
           return false
         }

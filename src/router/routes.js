@@ -31,6 +31,16 @@ const frameIn = [
         },
         component: _import('system/log')
       },
+      // 系统 前端日志
+      {
+        path: 'profile',
+        name: 'profile',
+        meta: {
+          title: '个人中心',
+          auth: true
+        },
+        component: _import('profile')
+      },
       // 刷新页面 必须保留
       {
         path: 'refresh',

@@ -34,7 +34,7 @@
 import * as roleService from '@/api/sys/role'
 import * as menuService from '@/api/sys/menu'
 export default {
-  name: 'rolePermission',
+  name: 'RolePermission',
   props: {
     role: Object,
     value: Boolean

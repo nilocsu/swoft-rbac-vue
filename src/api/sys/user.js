@@ -109,6 +109,19 @@ export function delUsers (ids) {
     }
   })
 }
+export function getProfile () {
+  return request({
+    url: '/system/admin/profile',
+    method: 'get',
+    success: {
+      type: 'message',
+      options: {
+        message: '保存成功',
+        type: 'success'
+      }
+    }
+  })
+}
 export function updateProfile (data) {
   return request({
     url: '/system/admin/profile',
@@ -139,13 +152,11 @@ export function updateAvatar (avatar) {
     }
   })
 }
-export function updatePassword (password) {
+export function updatePassword (data) {
   return request({
     url: '/system/admin/password',
     method: 'put',
-    data: {
-      'password': password
-    },
+    data,
     success: {
       type: 'message',
       options: {
@@ -153,5 +164,11 @@ export function updatePassword (password) {
         type: 'success'
       }
     }
+  })
+}
+export function index (username) {
+  return request({
+    url: `/system/index/${username}`,
+    method: 'get'
   })
 }

@@ -75,11 +75,11 @@ service.interceptors.response.use(
           return dataAxios.data
         case 'xxx':
           // [ 示例 ] 其它和后台约定的 code
-          errorCreate(`[ code: xxx ] ${dataAxios.msg}: ${response.config.url}`)
+          errorCreate(`[ code: xxx ] ${dataAxios.msg}`)
           break
         default:
           // 不是正确的 code
-          errorCreate(`${dataAxios.msg}: ${response.config.url}`)
+          errorCreate(`${dataAxios.msg}`)
           break
       }
     }
@@ -106,23 +106,10 @@ service.interceptors.response.use(
         case 503: error.message = '服务不可用'; break
         case 504: error.message = '网关超时'; break
         case 505: error.message = 'HTTP版本不受支持'; break
-        default:
-          util.cookies.remove('token')
-          util.cookies.remove('uuid')
-          router.replace({
-            path: 'login',
-            query: { redirect: router.currentRoute.fullPath }
-          })
-          return
+        default: break
       }
     } else {
-      util.cookies.remove('token')
-      util.cookies.remove('uuid')
-      router.replace({
-        path: 'login',
-        query: { redirect: router.currentRoute.fullPath }
-      })
-      return
+      error.message = '服务不可用'
     }
     console.log(error.response)
     errorLog(error)

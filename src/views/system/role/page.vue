@@ -75,9 +75,9 @@
 </template>
 <script>
 import * as roleService from '@/api/sys/role'
-import editForm from './editForm'
-import rolePermission from './rolePermission'
-import roleUser from './roleUser'
+import editForm from './components/form'
+import rolePermission from './components/permission'
+import roleUser from './components/users'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'RolePage',

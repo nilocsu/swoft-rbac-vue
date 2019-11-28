@@ -122,19 +122,3 @@ export function updateRoleMenus (roleId, data) {
     }
   })
 }
-export function exportRole (data) {
-  return request({
-    url: '/system/role/export',
-    method: 'post',
-    loading: {
-      type: 'loading',
-      options: {
-        fullscreen: true,
-        lock: true,
-        text: '加载中...',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.8)'
-      }
-    }
-  })
-}

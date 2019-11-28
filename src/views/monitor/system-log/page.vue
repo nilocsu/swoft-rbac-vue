@@ -94,7 +94,7 @@
         label="耗时"
       >
       <template slot-scope="scope">
-        <el-tag v-if="scope.row.time < 500" :type="getType(scope.row.time)">{{scope.row.time}}ms</el-tag>
+        <el-tag :type="getType(scope.row.time)">{{scope.row.time}}ms</el-tag>
       </template>
       </el-table-column>
       <el-table-column
@@ -106,7 +106,6 @@
         prop="params"
         label="方法参数"
         width="180"
-        height="180"
       >
       </el-table-column>
       <el-table-column

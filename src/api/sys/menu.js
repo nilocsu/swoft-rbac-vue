@@ -109,18 +109,3 @@ export function getMenuParentIds (id) {
     }
   })
 }
-export function exportMenu (data) {
-  return request({
-    url: '/system/menu',
-    interfaceCheck: true,
-    method: 'post',
-    data,
-    success: {
-      type: 'message',
-      options: {
-        message: '导出成功',
-        type: 'success'
-      }
-    }
-  })
-}
